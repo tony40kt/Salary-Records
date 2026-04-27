@@ -91,12 +91,54 @@
 
 ---
 
+## 📂 專案結構
+
+```
+salary-records/
+├── app/                    # Expo Router 頁面
+│   ├── _layout.tsx         # 根 Layout（初始化資料庫）
+│   ├── (tabs)/             # 底部分頁
+│   │   ├── places.tsx      # 地點管理頁
+│   │   ├── records.tsx     # 工作記錄清單頁
+│   │   └── settings.tsx    # 設定頁
+│   ├── place/
+│   │   ├── new.tsx         # 新增地點
+│   │   └── [id].tsx        # 編輯地點
+│   ├── record/
+│   │   ├── new.tsx         # 新增記錄
+│   │   └── [id].tsx        # 記錄詳情
+│   ├── export.tsx          # 匯出 CSV 頁
+│   └── help.tsx            # 說明教學頁
+├── src/
+│   ├── types/              # TypeScript 型別定義
+│   │   ├── place.ts
+│   │   └── record.ts
+│   ├── database/           # SQLite 資料庫層
+│   │   ├── index.ts        # 初始化 & 連線
+│   │   ├── placeDb.ts      # 地點 CRUD
+│   │   └── recordDb.ts     # 記錄 CRUD & 搜尋
+│   ├── hooks/              # React Hooks
+│   │   ├── usePlaces.ts
+│   │   └── useRecords.ts
+│   └── services/
+│       └── exportService.ts # CSV 匯出服務
+├── assets/                 # 圖示與啟動畫面
+├── app.json                # Expo 設定
+├── package.json
+└── tsconfig.json
+```
+
+---
+
 ## ▶️ 開始使用（Expo Go）
 
-> 如未安裝 Expo CLI，可先安裝 Node.js 與 Expo CLI。
+> 環境需求：Node.js 18+、npm 或 yarn
 
 ```bash
+# 1. 安裝依賴
 npm install
+
+# 2. 啟動開發伺服器
 npx expo start
 ```
 
