@@ -36,9 +36,7 @@ export function usePlaces() {
   const add = useCallback((input: PlaceInput): Place | null => {
     try {
       const newPlace = createPlace(input);
-      setPlaces((prev) => [...prev, newPlace].sort((a, b) =>
-        a.placeName.localeCompare(b.placeName, 'zh-Hant'),
-      ));
+      setPlaces(getAllPlaces());
       return newPlace;
     } catch (e) {
       setError('新增地點失敗');

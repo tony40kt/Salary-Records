@@ -38,7 +38,7 @@ export function initDatabase(): void {
       placeName     TEXT    NOT NULL,
       placeCode     TEXT    NOT NULL,
       transportFee  REAL    NOT NULL DEFAULT 0,
-      FOREIGN KEY (placeId) REFERENCES place(id)
+      FOREIGN KEY (placeId) REFERENCES place(id) ON DELETE RESTRICT
     );
   `);
 }

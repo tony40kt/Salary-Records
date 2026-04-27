@@ -4,10 +4,21 @@ import type { Record } from '../types/record';
 
 const CSV_HEADER = '工作日期,工作地點,地點代碼,地點車資\n';
 
+/** 對 CSV 欄位進行跳脫處理（RFC 4180） */
+function escapeCsvField(value: string | number): string {
+  const str = String(value);
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
 /** 將記錄陣列轉換為 CSV 字串 */
 function recordsToCsv(records: Record[]): string {
   const rows = records.map((r) =>
-    [r.workDate, r.placeName, r.placeCode, r.transportFee].join(','),
+    [r.workDate, r.placeName, r.placeCode, r.transportFee]
+      .map(escapeCsvField)
+      .join(','),
   );
   return CSV_HEADER + rows.join('\n');
 }

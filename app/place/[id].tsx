@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { usePlaces } from '../../src/hooks/usePlaces';
+import { parseTransportFee } from '../../src/utils/dateUtils';
 
 /** 編輯地點頁面（依 id 載入現有資料） */
 export default function EditPlaceScreen() {
@@ -42,8 +43,8 @@ export default function EditPlaceScreen() {
       Alert.alert('請填寫地點代碼');
       return;
     }
-    const fee = parseFloat(transportFee);
-    if (isNaN(fee) || fee < 0) {
+    const fee = parseTransportFee(transportFee);
+    if (fee === null) {
       Alert.alert('車資必須為有效的非負數字');
       return;
     }

@@ -62,7 +62,7 @@ export default function SettingsScreen() {
   }
 
   const appVersion =
-    Constants.expoConfig?.version ?? '1.0.0';
+    Constants.expoConfig?.version ?? Constants.manifest?.version ?? '';
 
   return (
     <View style={styles.container}>
