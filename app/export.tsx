@@ -27,6 +27,7 @@ export default function ExportScreen() {
     try {
       setExporting(true);
       await exportRecordsToCsv(records);
+      Alert.alert('已複製', 'CSV 已複製到剪貼簿，可貼到備忘錄或試算表。');
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : '匯出失敗，請重試';
       Alert.alert('匯出錯誤', message);
