@@ -6,6 +6,8 @@ import {
   updatePlace,
   deletePlace,
   getPlaceById,
+  existsPlaceCode,
+  isPlaceUsed,
 } from '../database/placeDb';
 
 /**
@@ -32,48 +34,81 @@ export function usePlaces() {
     }
   }, []);
 
-  /** 新增地點 */
-  const add = useCallback((input: PlaceInput): Place | null => {
+  /** 新增地點（placeCode 不可重複） */
+  const add = useCallback((input: PlaceInput): Place => {
     try {
-      const newPlace = createPlace(input);
+      setError(null);
+
+      if (existsPlaceCode(input.placeCode)) {
+        throw new Error('地點代碼已存在，請更換代碼');
+      }
+
+      const normalized: PlaceInput = {
+        ...input,
+        placeName: input.placeName.trim(),
+        placeCode: input.placeCode.trim().toUpperCase(),
+      };
+
+      const newPlace = createPlace(normalized);
       setPlaces(getAllPlaces());
       return newPlace;
     } catch (e) {
-      setError('新增地點失敗');
+      const message = e instanceof Error ? e.message : '新增地點失敗';
+      setError(message);
       console.error(e);
-      return null;
+      throw new Error(message);
     }
   }, []);
 
-  /** 更新地點 */
+  /** 更新地點（placeCode 不可重複，排除自身 id） */
   const update = useCallback((id: number, input: PlaceInput): boolean => {
     try {
-      const ok = updatePlace(id, input);
+      setError(null);
+
+      if (existsPlaceCode(input.placeCode, id)) {
+        throw new Error('地點代碼已存在，請更換代碼');
+      }
+
+      const normalized: PlaceInput = {
+        ...input,
+        placeName: input.placeName.trim(),
+        placeCode: input.placeCode.trim().toUpperCase(),
+      };
+
+      const ok = updatePlace(id, normalized);
       if (ok) {
         setPlaces((prev) =>
-          prev.map((p) => (p.id === id ? { id, ...input } : p)),
+          prev.map((p) => (p.id === id ? { id, ...normalized } : p)),
         );
       }
       return ok;
     } catch (e) {
-      setError('更新地點失敗');
+      const message = e instanceof Error ? e.message : '更新地點失敗';
+      setError(message);
       console.error(e);
-      return false;
+      throw new Error(message);
     }
   }, []);
 
-  /** 刪除地點 */
+  /** 刪除地點（若已被工作記錄使用則禁止刪除） */
   const remove = useCallback((id: number): boolean => {
     try {
+      setError(null);
+
+      if (isPlaceUsed(id)) {
+        throw new Error('此地點已被工作記錄使用，無法刪除');
+      }
+
       const ok = deletePlace(id);
       if (ok) {
         setPlaces((prev) => prev.filter((p) => p.id !== id));
       }
       return ok;
     } catch (e) {
-      setError('刪除地點失敗');
+      const message = e instanceof Error ? e.message : '刪除地點失敗';
+      setError(message);
       console.error(e);
-      return false;
+      throw new Error(message);
     }
   }, []);
 

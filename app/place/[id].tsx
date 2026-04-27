@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  View,
   Text,
   TextInput,
   TouchableOpacity,
@@ -48,16 +47,24 @@ export default function EditPlaceScreen() {
       Alert.alert('車資必須為有效的非負數字');
       return;
     }
+
     const placeId = parseInt(id ?? '0', 10);
-    const ok = update(placeId, {
-      placeName: placeName.trim(),
-      placeCode: placeCode.trim(),
-      transportFee: fee,
-    });
-    if (ok) {
-      router.back();
-    } else {
-      Alert.alert('更新失敗，請重試');
+
+    try {
+      const ok = update(placeId, {
+        placeName: placeName.trim(),
+        placeCode: placeCode.trim(),
+        transportFee: fee,
+      });
+
+      if (ok) {
+        router.back();
+      } else {
+        Alert.alert('更新失敗', '找不到此地點或資料未變更。');
+      }
+    } catch (e) {
+      const message = e instanceof Error ? e.message : '更新失敗，請重試';
+      Alert.alert('更新失敗', message);
     }
   }
 
@@ -72,21 +79,27 @@ export default function EditPlaceScreen() {
           style={styles.input}
           value={placeName}
           onChangeText={setPlaceName}
+          placeholder="例如：總公司"
         />
+
         <Text style={styles.label}>地點代碼 *</Text>
         <TextInput
           style={styles.input}
           value={placeCode}
           onChangeText={setPlaceCode}
           autoCapitalize="characters"
+          placeholder="例如：HQ01"
         />
+
         <Text style={styles.label}>地點車資（$）</Text>
         <TextInput
           style={styles.input}
           value={transportFee}
           onChangeText={setTransportFee}
           keyboardType="decimal-pad"
+          placeholder="例如：50"
         />
+
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
           <Text style={styles.saveBtnText}>儲存變更</Text>
         </TouchableOpacity>
@@ -98,20 +111,23 @@ export default function EditPlaceScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   content: { padding: 20 },
+
   label: { fontSize: 14, color: '#555', marginBottom: 6, marginTop: 14 },
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 12,
     fontSize: 15,
+    backgroundColor: '#fff',
   },
+
   saveBtn: {
     marginTop: 30,
     backgroundColor: '#2563eb',
-    borderRadius: 8,
+    borderRadius: 14,
     paddingVertical: 14,
     alignItems: 'center',
   },
-  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
 });

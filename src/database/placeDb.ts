@@ -50,3 +50,34 @@ export function deleteAllPlaces(): void {
   const db = getDatabase();
   db.runSync('DELETE FROM place;');
 }
+
+/** 檢查 placeCode 是否已存在（忽略大小寫；update 可排除自身 id） */
+export function existsPlaceCode(placeCode: string, excludeId?: number): boolean {
+  const db = getDatabase();
+  const code = placeCode.trim().toUpperCase();
+  if (!code) return false;
+
+  if (excludeId != null) {
+    const row = db.getFirstSync<{ count: number }>(
+      'SELECT COUNT(1) as count FROM place WHERE UPPER(placeCode) = ? AND id != ?;',
+      [code, excludeId],
+    );
+    return (row?.count ?? 0) > 0;
+  }
+
+  const row = db.getFirstSync<{ count: number }>(
+    'SELECT COUNT(1) as count FROM place WHERE UPPER(placeCode) = ?;',
+    [code],
+  );
+  return (row?.count ?? 0) > 0;
+}
+
+/** 地點是否已被 record 使用（用於禁止刪除） */
+export function isPlaceUsed(placeId: number): boolean {
+  const db = getDatabase();
+  const row = db.getFirstSync<{ count: number }>(
+    'SELECT COUNT(1) as count FROM record WHERE placeId = ?;',
+    [placeId],
+  );
+  return (row?.count ?? 0) > 0;
+}

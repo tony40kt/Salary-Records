@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useRecords } from '../../src/hooks/useRecords';
 
 /** 工作記錄清單頁 — 列表、搜尋、刪除 */
@@ -17,9 +17,13 @@ export default function RecordsScreen() {
   const { records, load, remove, search } = useRecords();
   const [keyword, setKeyword] = useState('');
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  // 每次畫面獲得焦點（從新增/編輯頁返回、切 tab 回來）就 reload
+  useFocusEffect(
+    useCallback(() => {
+      load();
+      // 可選：return () => {} 做清理
+    }, [load]),
+  );
 
   function handleDelete(id: number, date: string) {
     Alert.alert('刪除記錄', `確定要刪除「${date}」的記錄嗎？`, [
