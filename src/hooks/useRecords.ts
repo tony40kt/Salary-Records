@@ -37,6 +37,7 @@ export function useRecords() {
   /** 新增記錄 */
   const add = useCallback((input: RecordInput): Record | null => {
     try {
+      setError(null);
       const newRecord = createRecord(input);
       setRecords((prev) => [newRecord, ...prev]);
       return newRecord;

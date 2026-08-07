@@ -18,6 +18,13 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="settlement"
+        options={{
+          title: '結算',
+          tabBarLabel: '結算',
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: '設定',

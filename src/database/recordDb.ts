@@ -5,21 +5,35 @@ import type { Record, RecordInput } from '../types/record';
 export function createRecord(input: RecordInput): Record {
   const db = getDatabase();
   const result = db.runSync(
-    `INSERT INTO record (workDate, placeId, placeName, placeCode, transportFee)
-     VALUES (?, ?, ?, ?, ?);`,
+    `INSERT INTO record (
+      workDate,
+      placeId,
+      placeName,
+      placeCode,
+      transportFee,
+      regularHours,
+      semiProcessedHours,
+      doubleShiftHours,
+      hourlyWage
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
     input.workDate,
     input.placeId,
     input.placeName,
     input.placeCode,
     input.transportFee,
+    input.regularHours,
+    input.semiProcessedHours,
+    input.doubleShiftHours,
+    input.hourlyWage,
   );
+
   return { id: result.lastInsertRowId, ...input };
 }
 
 /** 取得所有記錄（依工作日期降序） */
 export function getAllRecords(): Record[] {
   const db = getDatabase();
-  return db.getAllSync<Record>('SELECT * FROM record ORDER BY workDate DESC;');
+  return db.getAllSync<Record>('SELECT * FROM record ORDER BY workDate DESC, id DESC;');
 }
 
 /** 依 id 取得單一記錄 */
@@ -32,10 +46,11 @@ export function getRecordById(id: number): Record | null {
 export function searchRecords(keyword: string): Record[] {
   const db = getDatabase();
   const pattern = `%${keyword}%`;
+
   return db.getAllSync<Record>(
     `SELECT * FROM record
      WHERE placeName LIKE ? OR placeCode LIKE ? OR workDate LIKE ?
-     ORDER BY workDate DESC;`,
+     ORDER BY workDate DESC, id DESC;`,
     pattern,
     pattern,
     pattern,
@@ -46,7 +61,7 @@ export function searchRecords(keyword: string): Record[] {
 export function getRecordsByPlaceId(placeId: number): Record[] {
   const db = getDatabase();
   return db.getAllSync<Record>(
-    'SELECT * FROM record WHERE placeId = ? ORDER BY workDate DESC;',
+    'SELECT * FROM record WHERE placeId = ? ORDER BY workDate DESC, id DESC;',
     placeId,
   );
 }

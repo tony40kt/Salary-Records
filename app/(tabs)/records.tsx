@@ -10,6 +10,11 @@ import {
 } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useRecords } from '../../src/hooks/useRecords';
+import {
+  calculateRecordSalary,
+  calculateTotalHours,
+  formatMoney,
+} from '../../src/utils/salaryUtils';
 
 /** 工作記錄清單頁 — 列表、搜尋、刪除 */
 export default function RecordsScreen() {
@@ -17,11 +22,9 @@ export default function RecordsScreen() {
   const { records, load, remove, search } = useRecords();
   const [keyword, setKeyword] = useState('');
 
-  // 每次畫面獲得焦點（從新增/編輯頁返回、切 tab 回來）就 reload
   useFocusEffect(
     useCallback(() => {
       load();
-      // 可選：return () => {} 做清理
     }, [load]),
   );
 
@@ -50,32 +53,46 @@ export default function RecordsScreen() {
         onChangeText={handleSearch}
         clearButtonMode="while-editing"
       />
+
       <FlatList
         data={records}
         keyExtractor={(item) => String(item.id)}
         ListEmptyComponent={
           <Text style={styles.empty}>尚無記錄，請點下方「＋」新增</Text>
         }
-        renderItem={({ item }) => (
-          <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.info}
-              onPress={() => router.push(`/record/${item.id}`)}
-            >
-              <Text style={styles.date}>{item.workDate}</Text>
-              <Text style={styles.sub}>
-                {item.placeName}　代碼：{item.placeCode}　車資：${item.transportFee}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleDelete(item.id, item.workDate)}
-              style={styles.deleteBtn}
-            >
-              <Text style={styles.deleteText}>刪除</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        renderItem={({ item }) => {
+          const totalHours = calculateTotalHours(item);
+          const totalSalary = calculateRecordSalary(item);
+
+          return (
+            <View style={styles.row}>
+              <TouchableOpacity
+                style={styles.info}
+                onPress={() => router.push(`/record/${item.id}`)}
+              >
+                <Text style={styles.date}>{item.workDate}</Text>
+                <Text style={styles.mainInfo}>
+                  {item.placeName}　代碼：{item.placeCode}
+                </Text>
+                <Text style={styles.sub}>
+                  總鐘點：{totalHours.toFixed(2)}　車資：${item.transportFee}
+                </Text>
+                <Text style={styles.salary}>
+                  本筆薪資：{formatMoney(totalSalary)}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => handleDelete(item.id, item.workDate)}
+                style={styles.deleteBtn}
+              >
+                <Text style={styles.deleteText}>刪除</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
       />
+
       <TouchableOpacity
         style={styles.addBtn}
         onPress={() => router.push('/record/new')}
@@ -104,9 +121,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
-  info: { flex: 1 },
+  info: { flex: 1, paddingRight: 8 },
   date: { fontSize: 16, fontWeight: '600' },
-  sub: { fontSize: 13, color: '#666', marginTop: 2 },
+  mainInfo: { fontSize: 14, color: '#444', marginTop: 4 },
+  sub: { fontSize: 13, color: '#666', marginTop: 4 },
+  salary: {
+    fontSize: 14,
+    color: '#0f766e',
+    marginTop: 6,
+    fontWeight: '700',
+  },
   deleteBtn: { paddingHorizontal: 12, paddingVertical: 6 },
   deleteText: { color: '#e44', fontSize: 14 },
   addBtn: {

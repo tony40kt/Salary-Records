@@ -12,6 +12,24 @@ export function getDatabase(): SQLite.SQLiteDatabase {
   return _db;
 }
 
+function ensureColumn(
+  db: SQLite.SQLiteDatabase,
+  tableName: string,
+  columnName: string,
+  definition: string,
+): void {
+  const columns = db.getAllSync<{ name: string }>(
+    `PRAGMA table_info(${tableName});`,
+  );
+  const exists = columns.some((col) => col.name === columnName);
+
+  if (!exists) {
+    db.execSync(
+      `ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${definition};`,
+    );
+  }
+}
+
 /**
  * 初始化資料庫：建立資料表（若不存在）
  * 應在 App 啟動時呼叫一次。
@@ -19,7 +37,7 @@ export function getDatabase(): SQLite.SQLiteDatabase {
 export function initDatabase(): void {
   const db = getDatabase();
 
-  // 資料庫1：背景地點資料表
+  // 地點資料表
   db.execSync(`
     CREATE TABLE IF NOT EXISTS place (
       id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,16 +47,39 @@ export function initDatabase(): void {
     );
   `);
 
-  // 資料庫2：工作記錄資料表
+  // 工作記錄資料表
   db.execSync(`
     CREATE TABLE IF NOT EXISTS record (
-      id            INTEGER PRIMARY KEY AUTOINCREMENT,
-      workDate      TEXT    NOT NULL,
-      placeId       INTEGER NOT NULL,
-      placeName     TEXT    NOT NULL,
-      placeCode     TEXT    NOT NULL,
-      transportFee  REAL    NOT NULL DEFAULT 0,
+      id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+      workDate            TEXT    NOT NULL,
+      placeId             INTEGER NOT NULL,
+      placeName           TEXT    NOT NULL,
+      placeCode           TEXT    NOT NULL,
+      transportFee        REAL    NOT NULL DEFAULT 0,
+      regularHours        REAL    NOT NULL DEFAULT 0,
+      semiProcessedHours  REAL    NOT NULL DEFAULT 0,
+      doubleShiftHours    REAL    NOT NULL DEFAULT 0,
+      hourlyWage          REAL    NOT NULL DEFAULT 0,
       FOREIGN KEY (placeId) REFERENCES place(id) ON DELETE RESTRICT
+    );
+  `);
+
+  // 相容舊版 record 資料表
+  ensureColumn(db, 'record', 'regularHours', 'REAL NOT NULL DEFAULT 0');
+  ensureColumn(
+    db,
+    'record',
+    'semiProcessedHours',
+    'REAL NOT NULL DEFAULT 0',
+  );
+  ensureColumn(db, 'record', 'doubleShiftHours', 'REAL NOT NULL DEFAULT 0');
+  ensureColumn(db, 'record', 'hourlyWage', 'REAL NOT NULL DEFAULT 0');
+
+  // App 設定資料表
+  db.execSync(`
+    CREATE TABLE IF NOT EXISTS app_setting (
+      key   TEXT PRIMARY KEY NOT NULL,
+      value TEXT NOT NULL
     );
   `);
 }

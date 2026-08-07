@@ -24,10 +24,11 @@ export default function ExportScreen() {
       Alert.alert('沒有記錄', '目前沒有工作記錄可以匯出。');
       return;
     }
+
     try {
       setExporting(true);
       await exportRecordsToCsv(records);
-      Alert.alert('已複製', 'CSV 已複製到剪貼簿，可貼到備忘錄或試算表。');
+      Alert.alert('已複製', 'CSV 已複製到剪貼簿，可貼到備忘錄、Excel 或試算表。');
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : '匯出失敗，請重試';
       Alert.alert('匯出錯誤', message);
@@ -40,7 +41,7 @@ export default function ExportScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>匯出工作記錄</Text>
       <Text style={styles.desc}>
-        將目前所有工作記錄匯出為 CSV 檔案，可用 Excel 或 Google 試算表開啟。
+        將目前所有工作記錄匯出為 CSV 內容，可貼到 Excel 或 Google 試算表開啟。
       </Text>
       <Text style={styles.count}>
         目前記錄數量：{loading ? '載入中…' : `${records.length} 筆`}
@@ -50,14 +51,14 @@ export default function ExportScreen() {
         <ActivityIndicator size="large" color="#2563eb" style={styles.spinner} />
       ) : (
         <TouchableOpacity style={styles.exportBtn} onPress={handleExport}>
-          <Text style={styles.exportBtnText}>匯出 CSV 並分享</Text>
+          <Text style={styles.exportBtnText}>複製 CSV 到剪貼簿</Text>
         </TouchableOpacity>
       )}
 
       <View style={styles.note}>
         <Text style={styles.noteTitle}>注意事項</Text>
-        <Text style={styles.noteText}>• CSV 檔案包含：日期、地點、代碼、車資</Text>
-        <Text style={styles.noteText}>• 匯出後可選擇傳送至郵件、雲端或其他 App</Text>
+        <Text style={styles.noteText}>• CSV 包含日期、地點、代碼、車資、鐘點、時薪、本筆薪資</Text>
+        <Text style={styles.noteText}>• 匯出後請直接貼到 Excel、Numbers 或 Google 試算表</Text>
         <Text style={styles.noteText}>• 匯出不會刪除手機內的記錄</Text>
       </View>
     </View>
