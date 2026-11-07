@@ -6,6 +6,7 @@ export interface Record {
   placeName: string; // 儲存時從地點複製，便於離線查詢
   placeCode: string;
   transportFee: number;
+  extraTransportFee: number; // 新增：額外車資（預設 0）
   regularHours: number; // 日常鐘點
   semiProcessedHours: number; // 半加工鐘點
   doubleShiftHours: number; // 雙工鐘點

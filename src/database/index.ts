@@ -56,6 +56,7 @@ export function initDatabase(): void {
       placeName           TEXT    NOT NULL,
       placeCode           TEXT    NOT NULL,
       transportFee        REAL    NOT NULL DEFAULT 0,
+      extraTransportFee   REAL    NOT NULL DEFAULT 0,
       regularHours        REAL    NOT NULL DEFAULT 0,
       semiProcessedHours  REAL    NOT NULL DEFAULT 0,
       doubleShiftHours    REAL    NOT NULL DEFAULT 0,
@@ -65,6 +66,7 @@ export function initDatabase(): void {
   `);
 
   // 相容舊版 record 資料表
+  ensureColumn(db, 'record', 'extraTransportFee', 'REAL NOT NULL DEFAULT 0');
   ensureColumn(db, 'record', 'regularHours', 'REAL NOT NULL DEFAULT 0');
   ensureColumn(
     db,

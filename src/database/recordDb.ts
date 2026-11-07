@@ -4,6 +4,11 @@ import type { Record, RecordInput } from '../types/record';
 /** 新增工作記錄 */
 export function createRecord(input: RecordInput): Record {
   const db = getDatabase();
+
+  const extraTransportFee = Number(input.extraTransportFee ?? 0);
+  const baseTransportFee = Number(input.transportFee ?? 0);
+  const finalTransportFee = baseTransportFee + extraTransportFee;
+
   const result = db.runSync(
     `INSERT INTO record (
       workDate,
@@ -11,23 +16,67 @@ export function createRecord(input: RecordInput): Record {
       placeName,
       placeCode,
       transportFee,
+      extraTransportFee,
       regularHours,
       semiProcessedHours,
       doubleShiftHours,
       hourlyWage
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
     input.workDate,
     input.placeId,
     input.placeName,
     input.placeCode,
-    input.transportFee,
+    finalTransportFee,
+    extraTransportFee,
     input.regularHours,
     input.semiProcessedHours,
     input.doubleShiftHours,
     input.hourlyWage,
   );
 
-  return { id: result.lastInsertRowId, ...input };
+  return {
+    id: result.lastInsertRowId,
+    ...input,
+    transportFee: finalTransportFee,
+    extraTransportFee,
+  };
+}
+
+/** 更新工作記錄（編輯用） */
+export function updateRecord(id: number, input: RecordInput): boolean {
+  const db = getDatabase();
+
+  const extraTransportFee = Number(input.extraTransportFee ?? 0);
+  const baseTransportFee = Number(input.transportFee ?? 0);
+  const finalTransportFee = baseTransportFee + extraTransportFee;
+
+  const result = db.runSync(
+    `UPDATE record
+     SET workDate = ?,
+         placeId = ?,
+         placeName = ?,
+         placeCode = ?,
+         transportFee = ?,
+         extraTransportFee = ?,
+         regularHours = ?,
+         semiProcessedHours = ?,
+         doubleShiftHours = ?,
+         hourlyWage = ?
+     WHERE id = ?;`,
+    input.workDate,
+    input.placeId,
+    input.placeName,
+    input.placeCode,
+    finalTransportFee,
+    extraTransportFee,
+    input.regularHours,
+    input.semiProcessedHours,
+    input.doubleShiftHours,
+    input.hourlyWage,
+    id,
+  );
+
+  return result.changes > 0;
 }
 
 /** 取得所有記錄（依工作日期降序） */

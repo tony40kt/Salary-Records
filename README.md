@@ -10,9 +10,14 @@
 
 - ✅ 繁體中文介面
 - ✅ 完全離線、本機儲存
-- ✅ iOS Expo Go 可直接測試
+- ✅ iOS 原生開發版
 - ✅ 工作地點背景資料與記錄分離
 - ✅ 一鍵匯出 CSV / 分享檔案
+- ✅ 每個頁面底部顯示 AdMob Banner 廣告
+
+### AdMob app-ads.txt
+
+根目錄的 `app-ads.txt` 已使用本 App 的 AdMob Publisher ID 建立。上架前，請將此檔案發布到 App Store Connect 中所填的開發者網站網域根目錄，並確認可透過 `https://你的網域/app-ads.txt` 公開存取；只將檔案留在程式碼庫不會完成 AdMob 驗證。
 
 ---
 
@@ -130,19 +135,19 @@ salary-records/
 
 ---
 
-## ▶️ 開始使用（Expo Go）
+## ▶️ 開始使用（原生開發版）
 
-> 環境需求：Node.js 18+、npm 或 yarn
+> 環境需求：Node.js 18+、npm 或 yarn。AdMob 需要建立原生開發版，不能在 Expo Go 中使用。
 
 ```bash
 # 1. 安裝依賴
 npm install
 
-# 2. 啟動開發伺服器
-npx expo start
+# 2. 建置 iOS 原生開發版（AdMob 不支援 Expo Go）
+npx expo run:ios
 ```
 
-在 iOS 上用 **Expo Go** 掃描 QR Code 即可。
+修改 AdMob 原生設定後，需重新建置 App。
 
 ---
 
@@ -160,6 +165,7 @@ npx expo start
 - 所有資料皆儲存在手機本機（不會上傳雲端）
 - 重新安裝 App 會清除本機資料
 - 本專案為個人用途，採用免費資源與工具
+- 本 App 不提供 Android 版本；iOS AdMob App ID 與 Banner ID 已設定於 `app.json`。
 
 ---
 

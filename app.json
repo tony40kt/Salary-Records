@@ -1,38 +1,46 @@
 {
   "expo": {
-    "name": "薪資工作記錄",
+    "name": "Salary Records",
     "slug": "salary-records",
     "version": "1.0.0",
-    "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "scheme": "salary-records",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "bundleIdentifier": "com.tony40kt.salaryrecords",
+      "buildNumber": "1",
       "supportsTablet": false,
-      "bundleIdentifier": "com.tony40kt.salaryrecords"
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.tony40kt.salaryrecords"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro"
-    },
+    "platforms": [
+      "ios",
+      "web"
+    ],
     "plugins": [
       "expo-router",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "react-native-google-mobile-ads",
+        {
+          "iosAppId": "ca-app-pub-6534294537643972~5004578845"
+        }
+      ]
     ],
-    "scheme": "salary-records",
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "iosAdMobBannerId": "ca-app-pub-6534294537643972/1461899597",
+      "router": {},
+      "eas": {
+        "projectId": "15d4722c-ccce-43cf-807e-e6d285cc82c6"
+      }
     }
   }
 }

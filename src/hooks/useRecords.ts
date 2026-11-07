@@ -3,6 +3,7 @@ import type { Record, RecordInput } from '../types/record';
 import {
   getAllRecords,
   createRecord,
+  updateRecord,
   deleteRecord,
   deleteAllRecords,
   searchRecords,
@@ -45,6 +46,22 @@ export function useRecords() {
       setError('新增記錄失敗');
       console.error(e);
       return null;
+    }
+  }, []);
+
+  /** 更新記錄 */
+  const update = useCallback((id: number, input: RecordInput): boolean => {
+    try {
+      setError(null);
+      const ok = updateRecord(id, input);
+      if (ok) {
+        setRecords(getAllRecords());
+      }
+      return ok;
+    } catch (e) {
+      setError('更新記錄失敗');
+      console.error(e);
+      return false;
     }
   }, []);
 
@@ -105,6 +122,7 @@ export function useRecords() {
     error,
     load,
     add,
+    update,
     remove,
     removeAll,
     search,

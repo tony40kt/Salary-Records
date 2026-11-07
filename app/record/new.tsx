@@ -43,6 +43,7 @@ export default function NewRecordScreen() {
   const [semiProcessedHours, setSemiProcessedHours] = useState('0');
   const [doubleShiftHours, setDoubleShiftHours] = useState('0');
   const [hourlyWage, setHourlyWage] = useState('');
+  const [extraTransportFee, setExtraTransportFee] = useState('0'); // 新增欄位
 
   const [placeKeyword, setPlaceKeyword] = useState('');
   const [showPlaceResults, setShowPlaceResults] = useState(true);
@@ -89,22 +90,27 @@ export default function NewRecordScreen() {
       emptyAsZero: true,
     });
     const parsedWage = parseNonNegativeNumber(hourlyWage);
+    const parsedExtraTransport = parseNonNegativeNumber(extraTransportFee, {
+      emptyAsZero: true,
+    });
 
     if (
       parsedRegular === null ||
       parsedSemi === null ||
       parsedDouble === null ||
-      parsedWage === null
+      parsedWage === null ||
+      parsedExtraTransport === null
     ) {
       return null;
     }
 
     return calculateRecordSalary({
-      transportFee: selectedPlace.transportFee,
+      transportFee: selectedPlace.transportFee + parsedExtraTransport,
       regularHours: parsedRegular,
       semiProcessedHours: parsedSemi,
       doubleShiftHours: parsedDouble,
       hourlyWage: parsedWage,
+      extraTransportFee: parsedExtraTransport,
     });
   }, [
     selectedPlace,
@@ -112,6 +118,7 @@ export default function NewRecordScreen() {
     semiProcessedHours,
     doubleShiftHours,
     hourlyWage,
+    extraTransportFee,
   ]);
 
   function handleSelectPlace(place: Place) {
@@ -139,6 +146,9 @@ export default function NewRecordScreen() {
       emptyAsZero: true,
     });
     const parsedWage = parseNonNegativeNumber(hourlyWage);
+    const parsedExtraTransport = parseNonNegativeNumber(extraTransportFee, {
+      emptyAsZero: true,
+    });
 
     if (
       parsedRegular === null ||
@@ -154,12 +164,18 @@ export default function NewRecordScreen() {
       return;
     }
 
+    if (parsedExtraTransport === null) {
+      Alert.alert('額外車資必須為 0 或正數，可輸入小數');
+      return;
+    }
+
     const result = add({
       workDate: formatDate(workDate),
       placeId: selectedPlace.id,
       placeName: selectedPlace.placeName,
       placeCode: selectedPlace.placeCode,
-      transportFee: selectedPlace.transportFee,
+      transportFee: selectedPlace.transportFee, // 基礎車資，DB 會加上額外車資
+      extraTransportFee: parsedExtraTransport,
       regularHours: parsedRegular,
       semiProcessedHours: parsedSemi,
       doubleShiftHours: parsedDouble,
@@ -172,6 +188,12 @@ export default function NewRecordScreen() {
       Alert.alert('儲存失敗，請重試');
     }
   }
+
+  const baseTransportFee = selectedPlace?.transportFee ?? 0;
+  const parsedExtraTransport = parseNonNegativeNumber(extraTransportFee, {
+    emptyAsZero: true,
+  }) ?? 0;
+  const totalTransportFee = baseTransportFee + parsedExtraTransport;
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -270,9 +292,20 @@ export default function NewRecordScreen() {
               <Text style={styles.summaryTitle}>已選擇地點資訊</Text>
               <Text style={styles.summaryRow}>地點：{selectedPlace.placeName}</Text>
               <Text style={styles.summaryRow}>代碼：{selectedPlace.placeCode}</Text>
-              <Text style={styles.summaryRow}>車資：${selectedPlace.transportFee}</Text>
+              <Text style={styles.summaryRow}>基礎車資：{formatMoney(baseTransportFee)}</Text>
+              <Text style={styles.summaryRow}>額外車資：{formatMoney(parsedExtraTransport)}</Text>
+              <Text style={styles.summaryRow}>總車資：{formatMoney(totalTransportFee)}</Text>
             </View>
           )}
+
+          <Text style={styles.label}>額外車資</Text>
+          <TextInput
+            style={styles.input}
+            value={extraTransportFee}
+            onChangeText={setExtraTransportFee}
+            placeholder="例如：0 或 10.5"
+            keyboardType="decimal-pad"
+          />
 
           <Text style={styles.label}>日常鐘點</Text>
           <TextInput
