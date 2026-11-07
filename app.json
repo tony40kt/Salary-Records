@@ -33,7 +33,7 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true 
     },
     "extra": {
       "iosAdMobBannerId": "ca-app-pub-6534294537643972/1461899597",
