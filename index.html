@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <meta name="description" content="薪資工作記錄 App 官方資訊、使用說明及私隱聲明。">
+    <title>薪資工作記錄｜Salary Records</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #172033;
+        background: #f5f7fb;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 48px 20px;
+        display: grid;
+        place-items: center;
+      }
+
+      main {
+        width: min(100%, 680px);
+        padding: clamp(28px, 6vw, 56px);
+        border: 1px solid #e4e9f2;
+        border-radius: 24px;
+        background: #fff;
+        box-shadow: 0 20px 60px rgb(23 32 51 / 8%);
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: #2563eb;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 7vw, 3rem);
+        letter-spacing: -0.04em;
+      }
+
+      .intro {
+        margin: 16px 0 32px;
+        color: #5b6475;
+        font-size: 1.05rem;
+        line-height: 1.8;
+      }
+
+      h2 {
+        margin: 28px 0 12px;
+        font-size: 1rem;
+      }
+
+      .downloads {
+        display: grid;
+        gap: 12px;
+      }
+
+      .downloads a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        border: 1px solid #e4e9f2;
+        border-radius: 14px;
+        color: #172033;
+        font-weight: 650;
+        text-decoration: none;
+        transition: border-color 150ms ease, background 150ms ease;
+      }
+
+      .downloads a:hover,
+      .downloads a:focus-visible {
+        border-color: #93b4ff;
+        background: #f7f9ff;
+      }
+
+      .downloads a span:last-child {
+        color: #2563eb;
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+
+      footer {
+        margin-top: 36px;
+        padding-top: 22px;
+        border-top: 1px solid #e9edf4;
+        color: #5b6475;
+        font-size: 0.95rem;
+        line-height: 1.8;
+      }
+
+      footer p { margin: 4px 0; }
+      footer a { color: #1d4ed8; }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">SALARY RECORDS</p>
+      <h1>薪資工作記錄</h1>
+      <p class="intro">
+        簡單記錄工作地點、工時與薪資。App 以 iOS 為主，資料儲存在裝置本機。
+        您可以在此下載廣告授權檔、使用說明及私隱聲明。
+      </p>
+
+      <section aria-labelledby="downloads-title">
+        <h2 id="downloads-title">文件下載</h2>
+        <div class="downloads">
+          <a href="./app-ads.txt" download="app-ads.txt">
+            <span>app-ads.txt</span><span>下載檔案 ↓</span>
+          </a>
+          <a href="./使用說明.html" download="使用說明.html">
+            <span>使用說明</span><span>下載文件 ↓</span>
+          </a>
+          <a href="./私隱聲明.html" download="私隱聲明.html">
+            <span>私隱聲明</span><span>下載文件 ↓</span>
+          </a>
+        </div>
+      </section>
+
+      <footer>
+        <p><strong>制作者：</strong>TonyCheung</p>
+        <p><strong>聯絡方式：</strong><a href="mailto:tony40kt@gmail.com">tony40kt@gmail.com</a></p>
+      </footer>
+    </main>
+  </body>
+</html>

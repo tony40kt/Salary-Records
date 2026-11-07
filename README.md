@@ -19,6 +19,8 @@
 
 根目錄的 `app-ads.txt` 已使用本 App 的 AdMob Publisher ID 建立。上架前，請將此檔案發布到 App Store Connect 中所填的開發者網站網域根目錄，並確認可透過 `https://你的網域/app-ads.txt` 公開存取；只將檔案留在程式碼庫不會完成 AdMob 驗證。
 
+根目錄的 `index.html` 是專案網站首頁，提供 `app-ads.txt`、`使用說明.html` 及 `私隱聲明.html` 的下載連結。
+
 ---
 
 ## 📱 使用情境
