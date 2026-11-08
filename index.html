@@ -59,12 +59,12 @@
         font-size: 1rem;
       }
 
-      .downloads {
+      .documents {
         display: grid;
         gap: 12px;
       }
 
-      .downloads a {
+      .document {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -72,22 +72,34 @@
         padding: 16px 18px;
         border: 1px solid #e4e9f2;
         border-radius: 14px;
-        color: #172033;
-        font-weight: 650;
-        text-decoration: none;
-        transition: border-color 150ms ease, background 150ms ease;
       }
 
-      .downloads a:hover,
-      .downloads a:focus-visible {
+      .document:hover {
         border-color: #93b4ff;
         background: #f7f9ff;
       }
 
-      .downloads a span:last-child {
+      .document-name {
+        color: #172033;
+        font-weight: 650;
+      }
+
+      .document-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 16px;
+      }
+
+      .document-actions a {
         color: #2563eb;
         font-size: 0.9rem;
         white-space: nowrap;
+      }
+
+      .document-actions a:focus-visible {
+        outline: 2px solid #2563eb;
+        outline-offset: 3px;
       }
 
       footer {
@@ -117,17 +129,29 @@
       </p>
 
       <section aria-labelledby="downloads-title">
-        <h2 id="downloads-title">文件下載</h2>
-        <div class="downloads">
-          <a href="./app-ads.txt" download="app-ads.txt">
-            <span>app-ads.txt</span><span>下載檔案 ↓</span>
-          </a>
-          <a href="./使用說明.html" download="使用說明.html">
-            <span>使用說明</span><span>下載文件 ↓</span>
-          </a>
-          <a href="./私隱聲明.html" download="私隱聲明.html">
-            <span>私隱聲明</span><span>下載文件 ↓</span>
-          </a>
+        <h2 id="downloads-title">文件</h2>
+        <div class="documents">
+          <div class="document">
+            <span class="document-name">app-ads.txt</span>
+            <div class="document-actions">
+              <a href="./app-ads.txt">即時查看</a>
+              <a href="./app-ads.txt" download="app-ads.txt">下載檔案 ↓</a>
+            </div>
+          </div>
+          <div class="document">
+            <span class="document-name">使用說明</span>
+            <div class="document-actions">
+              <a href="./使用說明.html">即時查看</a>
+              <a href="./使用說明.html" download="使用說明.html">下載文件 ↓</a>
+            </div>
+          </div>
+          <div class="document">
+            <span class="document-name">私隱聲明</span>
+            <div class="document-actions">
+              <a href="./私隱聲明.html">即時查看</a>
+              <a href="./私隱聲明.html" download="私隱聲明.html">下載文件 ↓</a>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -138,4 +162,3 @@
     </main>
   </body>
 </html>
-
